@@ -81,9 +81,6 @@ export default function Card() {
         staticData={data.staticData}
         dynamicData={data.dynamicData}
       />
-      <div style={{ marginTop: 18 }}>
-        <Link to="/">Back to Home</Link>
-      </div>
     </div>
   );
 }
