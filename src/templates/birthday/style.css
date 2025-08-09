@@ -1,0 +1,41 @@
+.birthday-card {
+  max-width: 500px;
+  margin: 2rem auto;
+  border: 3px dashed #ff9f9f;
+  padding: 20px;
+  border-radius: 15px;
+  background: #fff3f3;
+  font-family: 'Comic Sans MS', cursive;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.card-banner {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  text-align: center;
+  color: #e91e63;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.card-body p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.guest-image-wrapper {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.guest-image {
+  max-width: 120px;
+  border-radius: 50%;
+  border: 3px solid #e91e63;
+}

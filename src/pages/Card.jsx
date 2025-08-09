@@ -24,7 +24,6 @@ export default function Card() {
     }
 
     try {
-      // decodeURIComponent because we encoded when navigating
       const decoded = decodeURIComponent(code);
       const bytes = CryptoJS.AES.decrypt(decoded, SECRET_KEY);
       const plaintext = bytes.toString(CryptoJS.enc.Utf8);
@@ -41,13 +40,14 @@ export default function Card() {
         return;
       }
 
-      // dynamic import of template component
-      templateDef.component().then((mod) => {
-        setTemplateComponent(() => mod.default);
-      }).catch((e) => {
-        console.error(e);
-        setError("Failed to load template component");
-      });
+      templateDef.component()
+        .then((mod) => {
+          setTemplateComponent(() => mod.default);
+        })
+        .catch((e) => {
+          console.error(e);
+          setError("Failed to load template component");
+        });
     } catch (err) {
       console.error(err);
       setError("Decryption failed");
@@ -74,10 +74,13 @@ export default function Card() {
     );
   }
 
-  // pass all data (static s_ fields + cards array etc.) to template component
+  // Now pass staticData and dynamicData groups as props to template component
   return (
     <div style={{ padding: 12 }}>
-      <TemplateComponent {...data} />
+      <TemplateComponent
+        staticData={data.staticData}
+        dynamicData={data.dynamicData}
+      />
       <div style={{ marginTop: 18 }}>
         <Link to="/">Back to Home</Link>
       </div>

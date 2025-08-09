@@ -1,7 +1,12 @@
-// src/templates/classic/config.js
 export default {
-  name: "Classic Template",
+  name: "Birthday Invitation",
   staticData: [
+    {
+      name: "event_title",
+      label: "Event Title",
+      type: "text",
+      size: 1,
+    },
     {
       name: "location",
       label: "Location",
@@ -15,10 +20,10 @@ export default {
       size: 1,
     },
     {
-      name: "images",
-      label: "Images",
+      name: "banner",
+      label: "Banner Image URL",
       type: "images",
-      size: 2,
+      size: 1,
     },
   ],
   dynamicData: [
@@ -29,8 +34,8 @@ export default {
       size: 1,
     },
     {
-      name: "guest_images",
-      label: "Guest Images",
+      name: "guest_image",
+      label: "Guest Image",
       type: "images",
       size: 1,
     },

@@ -1,3 +1,5 @@
+// src/components/forms/DynamicTableForm.jsx
+import { useEffect, useState } from "react";
 import FormField from "./FormField";
 import "./DynamicTableForm.css";
 
@@ -8,57 +10,61 @@ export default function DynamicTableForm({
   onAddRow,
   onRemoveRow,
   extraColumn,
+  validate,
 }) {
+  const [validityPerRow, setValidityPerRow] = useState([]);
+
+  useEffect(() => {
+    const validity = rows.map((row) => {
+      const rowValid = fields.every((f) =>
+        f.size > 1
+          ? Array.isArray(row[f.name]) && row[f.name]?.length === f.size
+          : row[f.name] !== ""
+      );
+      return { id: row.id, valid: rowValid };
+    });
+    setValidityPerRow(validity);
+    validate?.(validity);
+  }, [rows, fields, validate]);
+
   return (
     <div className="dynamic-table-form">
       <h3>Dynamic Cards</h3>
-
       <table className="dynamic-table">
         <thead>
           <tr>
-            {fields.map((field) => (
-              <th key={field.name}>{field.label}</th>
+            {fields.map((f) => (
+              <th key={f.name}>
+                {f.label}
+                {f.size > 1 && <span style={{ color: "#888" }}> (Required: {f.size})</span>}
+              </th>
             ))}
             <th>Generated Link</th>
             <th>Remove</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={row.id}>
-              {fields.map((field) => (
-                <td key={field.name}>
-                  <div className={field.is_array ? "array-cell-content" : ""}>
-                    <FormField
-                      field={field}
-                      value={row[field.name]}
-                      onChange={(val) => onChangeRow(row.id, field.name, val)}
-                    />
-                  </div>
+          {rows.map((row) => {
+            const rowValid = validityPerRow.find((vr) => vr.id === row.id)?.valid ?? true;
+            return (
+              <tr key={row.id} style={{ border: rowValid ? undefined : "2px solid red" }}>
+                {fields.map((f) => (
+                  <td key={f.name}>
+                    <FormField field={f} value={row[f.name]} onChange={(v) => onChangeRow(row.id, f.name, v)} />
+                  </td>
+                ))}
+                <td>{extraColumn && extraColumn(row)}</td>
+                <td>
+                  <button onClick={() => onRemoveRow(row.id)} disabled={rows.length === 1}>
+                    Remove
+                  </button>
                 </td>
-              ))}
-
-              <td className="generated-link-column">
-                {extraColumn && extraColumn(row)}
-              </td>
-
-              <td>
-                <button
-                  className="remove-btn"
-                  onClick={() => onRemoveRow(row.id)}
-                  disabled={rows.length === 1}
-                >
-                  Remove
-                </button>
-              </td>
-            </tr>
-          ))}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
-
-      <button className="add-row-btn" onClick={onAddRow}>
-        Add Card
-      </button>
+      <button onClick={onAddRow}>Add Card</button>
     </div>
   );
 }

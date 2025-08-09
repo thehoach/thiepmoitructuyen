@@ -9,6 +9,10 @@ export default function ArrayField({ field, value, onChange }) {
 
   const handleAddItem = () => {
     if (!inputValue) return;
+    if (items.length >= field.size) {
+      alert(`Maximum of ${field.size} items allowed.`);
+      return;
+    }
     onChange([...items, inputValue]);
     setInputValue("");
   };

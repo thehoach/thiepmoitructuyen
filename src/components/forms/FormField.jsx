@@ -1,17 +1,17 @@
+// src/components/FormField.jsx
 import { useState } from "react";
 
 export default function FormField({ field, value, onChange }) {
   const [inputValue, setInputValue] = useState("");
 
-  if (field.is_array) {
-    // Render list of items + input to add new item
-    const items = Array.isArray(value) ? value : [];
+  const isArray = field.size > 1;
+  const items = Array.isArray(value) ? value : [];
 
+  if (isArray) {
     const handleAdd = () => {
-      if (inputValue.trim()) {
-        onChange([...items, inputValue.trim()]);
-        setInputValue("");
-      }
+      if (!inputValue.trim()) return;
+      onChange([...items, inputValue.trim()]);
+      setInputValue("");
     };
 
     const handleRemove = (index) => {
@@ -22,21 +22,10 @@ export default function FormField({ field, value, onChange }) {
 
     return (
       <div className="array-field">
-        {items.map((item, i) => (
-          <div key={i} className="array-item">
-            {field.type === "images" ? (
-              <img
-                src={item}
-                alt={`preview-${i}`}
-                className="preview-image"
-                style={{ maxHeight: 60 }}
-              />
-            ) : (
-              <span>{item}</span>
-            )}
-            <button onClick={() => handleRemove(i)} className="remove-item-btn">
-              &times;
-            </button>
+        {items.map((item, idx) => (
+          <div key={idx} className="array-item">
+            {field.type === "images" ? <img src={item} alt="" style={{ maxHeight: 60 }} /> : <span>{item}</span>}
+            <button onClick={() => handleRemove(idx)}>×</button>
           </div>
         ))}
         <input
@@ -46,14 +35,11 @@ export default function FormField({ field, value, onChange }) {
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleAdd()}
         />
-        <button onClick={handleAdd} className="add-item-btn">
-          Add Image
-        </button>
+        <button onClick={handleAdd}>Add</button>
       </div>
     );
   }
 
-  // single value field (text, etc)
   return (
     <input
       type={field.type === "images" ? "text" : field.type}
