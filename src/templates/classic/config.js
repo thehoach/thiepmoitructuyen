@@ -9,6 +9,13 @@ export default {
         is_array: false,
       },
       {
+        name: "date",
+        label: "Date",
+        type: "text",
+        is_static: true,
+        is_array: false,
+      },
+      {
         name: "name",
         label: "Guest Name",
         type: "text",

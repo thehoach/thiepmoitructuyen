@@ -1,12 +1,13 @@
+import "./StaticForm.css";
 import FormField from "./FormField";
 
 export default function StaticForm({ fields, data, onChange }) {
   return (
-    <div style={{ marginBottom: 24 }}>
-      <h3>Static Information (same for all cards)</h3>
-      {fields.map(field => (
-        <div key={field.name} style={{ marginBottom: 12 }}>
-          <label><b>{field.label}</b>:</label>
+    <div className="static-form-container">
+      <h3>Static Fields</h3>
+      {fields.map((field) => (
+        <div key={field.name} className="static-form-group">
+          <label>{field.label}</label>
           <FormField
             field={field}
             value={data[field.name]}

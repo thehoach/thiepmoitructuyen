@@ -1,45 +1,64 @@
-import ImageListField from "./ImageListField";
+import { useState } from "react";
 
 export default function FormField({ field, value, onChange }) {
+  const [inputValue, setInputValue] = useState("");
+
   if (field.is_array) {
-    if (field.type === "images") {
-      return <ImageListField value={value} onChange={onChange} />;
-    }
-    // You can add more array-type handlers here later
-    return null;
-  }
+    // Render list of items + input to add new item
+    const items = Array.isArray(value) ? value : [];
 
-  if (field.type === "text") {
+    const handleAdd = () => {
+      if (inputValue.trim()) {
+        onChange([...items, inputValue.trim()]);
+        setInputValue("");
+      }
+    };
+
+    const handleRemove = (index) => {
+      const newItems = [...items];
+      newItems.splice(index, 1);
+      onChange(newItems);
+    };
+
     return (
-      <input
-        type="text"
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-        style={{ width: "100%", padding: 8 }}
-      />
+      <div className="array-field">
+        {items.map((item, i) => (
+          <div key={i} className="array-item">
+            {field.type === "images" ? (
+              <img
+                src={item}
+                alt={`preview-${i}`}
+                className="preview-image"
+                style={{ maxHeight: 60 }}
+              />
+            ) : (
+              <span>{item}</span>
+            )}
+            <button onClick={() => handleRemove(i)} className="remove-item-btn">
+              &times;
+            </button>
+          </div>
+        ))}
+        <input
+          type="text"
+          placeholder={`Add ${field.label}`}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+        />
+        <button onClick={handleAdd} className="add-item-btn">
+          Add Image
+        </button>
+      </div>
     );
   }
 
-  if (field.type === "textarea") {
-    return (
-      <textarea
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-        style={{ width: "100%", padding: 8, minHeight: 80 }}
-      />
-    );
-  }
-
-  if (field.type === "date") {
-    return (
-      <input
-        type="date"
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-        style={{ padding: 8 }}
-      />
-    );
-  }
-
-  return null;
+  // single value field (text, etc)
+  return (
+    <input
+      type={field.type === "images" ? "text" : field.type}
+      value={value || ""}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  );
 }

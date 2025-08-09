@@ -1,40 +1,64 @@
 import FormField from "./FormField";
+import "./DynamicTableForm.css";
 
-export default function DynamicTableForm({ fields, rows, onChangeRow, onAddRow, onRemoveRow, extraColumn }) {
+export default function DynamicTableForm({
+  fields,
+  rows,
+  onChangeRow,
+  onAddRow,
+  onRemoveRow,
+  extraColumn,
+}) {
   return (
-    <div>
-      <h3>Dynamic Information (per card)</h3>
-      <table border="1" cellPadding="6" style={{ borderCollapse: "collapse", marginBottom: 12, width: "100%" }}>
+    <div className="dynamic-table-form">
+      <h3>Dynamic Cards</h3>
+
+      <table className="dynamic-table">
         <thead>
           <tr>
-            {fields.map(field => (
+            {fields.map((field) => (
               <th key={field.name}>{field.label}</th>
             ))}
-            {extraColumn && <th>Link</th>}
-            <th>Actions</th>
+            <th>Generated Link</th>
+            <th>Remove</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map(row => (
+          {rows.map((row) => (
             <tr key={row.id}>
-              {fields.map(field => (
+              {fields.map((field) => (
                 <td key={field.name}>
-                  <FormField
-                    field={field}
-                    value={row[field.name]}
-                    onChange={(val) => onChangeRow(row.id, field.name, val)}
-                  />
+                  <div className={field.is_array ? "array-cell-content" : ""}>
+                    <FormField
+                      field={field}
+                      value={row[field.name]}
+                      onChange={(val) => onChangeRow(row.id, field.name, val)}
+                    />
+                  </div>
                 </td>
               ))}
-              {extraColumn && <td>{extraColumn(row)}</td>}
+
+              <td className="generated-link-column">
+                {extraColumn && extraColumn(row)}
+              </td>
+
               <td>
-                <button onClick={() => onRemoveRow(row.id)}>Remove</button>
+                <button
+                  className="remove-btn"
+                  onClick={() => onRemoveRow(row.id)}
+                  disabled={rows.length === 1}
+                >
+                  Remove
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <button onClick={onAddRow} style={{ marginBottom: 20 }}>+ Add Row</button>
+
+      <button className="add-row-btn" onClick={onAddRow}>
+        Add Card
+      </button>
     </div>
   );
 }
