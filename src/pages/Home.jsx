@@ -7,6 +7,7 @@ import DynamicTableForm from "../components/forms/DynamicTableForm";
 import "./Home.css";
 
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
+const homepage = import.meta.env.VITE_HOMEPAGE;
 const defaultTemplateId = "classic";
 
 export default function Home() {
@@ -62,7 +63,7 @@ export default function Home() {
         JSON.stringify(payload),
         SECRET_KEY
       ).toString();
-      const url = `${window.location.origin}/card?code=${encodeURIComponent(
+      const url = `${homepage}/#/card?code=${encodeURIComponent(
         encrypted
       )}`;
       return { ...row, link: url };
